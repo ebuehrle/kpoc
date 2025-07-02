@@ -24,7 +24,7 @@ end
 
 Σ = integrate.(ϕ*ϕ',M)
 F = svd(Σ)
-N = 15
+N = 2
 save("svd.pdf",Plots.Linear(F.S))
 
 m = GMPModel(Mosek.Optimizer)
@@ -39,21 +39,3 @@ q = let v = monomials(x[1:2],0:d)
     v'*inv(Σ+1e-4I)*v
 end
 save("merge.pdf", Plots.Image((x...)->1/q(x),(0,1),(0,1)))
-
-let m = Measure(F.U[:,1],ϕ)
-    v = monomials(x[1:2],0:d)
-    q = v'*inv(expectation.(v*v',[m]))*v 
-    save("pc1.pdf", Plots.Image((x...)->1/q(x),(0,1),(0,1)))
-end
-
-let m = Measure(F.U[:,2],ϕ)
-    v = monomials(x[1:2],0:d)
-    q = v'*inv(expectation.(v*v',[m]))*v 
-    save("pc2.pdf", Plots.Image((x...)->1/q(x),(0,1),(0,1)))
-end
-
-let m = Measure(F.U[:,3],ϕ)
-    v = monomials(x[1:2],0:d)
-    q = v'*inv(expectation.(v*v',[m]))*v 
-    save("pc3.pdf", Plots.Image((x...)->1/q(x),(0,1),(0,1)))
-end
