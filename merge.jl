@@ -14,7 +14,7 @@ D = CSV.read("vehicle_tracks_000.csv", DataFrame) |>
 @polyvar x[1:4]
 d = 2
 ϕ = monomials(x[1:2],0:2d)
-ρ0 = DiracMeasure(x,[0.5,0.0,0.0,0.0])
+ρ0 = DiracMeasure(x,[1.0,0.1,0.0,0.0])
 ρT = DiracMeasure(x,[0.0,0.6,0.0,0.0])
 M = sum(DiracMeasure(x,collect(s)) for s in eachrow(D)) * (1/size(D,1))
 Λ = let v = monomials(x,0:d)
