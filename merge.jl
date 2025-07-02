@@ -24,7 +24,7 @@ end
 
 Σ = integrate.(ϕ*ϕ',M)
 F = svd(Σ)
-N = 45
+N = 25
 save("svd.pdf",Plots.Linear(F.S))
 
 m = GMPModel(Mosek.Optimizer)
