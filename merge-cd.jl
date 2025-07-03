@@ -31,7 +31,7 @@ Q(x,y) = Φ(x)'*Φ(y)
 
 F = fit(KernelPCA, Float64.(stack(eachrow(D[1:200,1:2]))), kernel=Q)
 DΦ = stack(Φ.(collect.(eachrow(D[1:200,1:2]))))
-U = DΦ*projection(F)
+U = DΦ*eigvecs(F)
 UC = nullspace(U')
 
 m = GMPModel(Mosek.Optimizer)
