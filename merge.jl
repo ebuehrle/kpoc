@@ -15,7 +15,7 @@ D = CSV.read("vehicle_tracks_000.csv", DataFrame) |>
 d = 4
 ϕ = monomials(x[1:2],0:2d)
 ρ0 = DiracMeasure(x,[0.5,0.0,0.0,0.0])
-ρT = DiracMeasure(x,[0.0,0.6,0.0,0.0])
+ρT = DiracMeasure(x,[0.2,0.6,0.0,0.0])
 M = sum(DiracMeasure(x,collect(s)) for s in eachrow(D)) * (1/size(D,1))
 Λ = let v = monomials(x,0:d)
     Σ = integrate.(v*v',M)
@@ -24,8 +24,7 @@ end
 
 Σ = integrate.(ϕ*ϕ',M)
 F = svd(Σ)
-N = 5
-save("svd.pdf",Plots.Linear(F.S))
+N = 25
 
 m = GMPModel(Mosek.Optimizer)
 @variable m ρ Meas(x,support=@set(x'x<=10))
