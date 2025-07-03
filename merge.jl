@@ -39,6 +39,8 @@ q = let v = monomials(x[1:2],0:d)
 end
 save("merge.pdf", Axis([
     Plots.Image((x...)->1/q(x),(0,1),(0,1)),
-    Plots.Quiver(D[1:10:end,"x"],D[1:10:end,"y"],D[1:10:end,"vx"]/10,D[1:10:end,"vy"]/10,
+    Plots.Quiver(
+        D[1:10:end,"x"],D[1:10:end,"y"],
+        D[1:10:end,"vx"]/10,D[1:10:end,"vy"]/10,
         style="-stealth,blue,no markers"),
 ],xmin=0,xmax=1,ymin=0,ymax=1))
