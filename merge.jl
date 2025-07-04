@@ -22,7 +22,8 @@ M = sum(DiracMeasure(x,collect(s)) for s in eachrow(D)) * (1/size(D,1))
     v'*inv(Σ+1e-4I)*v
 end
 
-Σ = integrate.(ϕ*ϕ',M)
+M2 = [DiracMeasure(x,collect(s)) for s in eachrow(D)] * (1/size(D,1))
+Σ = sum(let a = integrate.(ϕ,m); a*a' end for m in M2)
 F = svd(Σ)
 N = 25
 
