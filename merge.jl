@@ -44,3 +44,11 @@ save("merge.pdf", Axis([
         D[1:10:end,"vx"]/10,D[1:10:end,"vy"]/10,
         style="-stealth,blue,no markers"),
 ],xmin=0,xmax=1,ymin=0,ymax=1))
+
+q1 = let a = F.U[:,1]; Measure(a,ϕ) end
+let m = q1;
+    v = monomials(x[1:2],0:d);
+    s = expectation.(v*v',[m]);
+    q = v'*inv(s+1e-4I)*v
+    save("pc1.pdf", Plots.Image((x...)->1/q(x),(0,1),(0,1)))
+end
