@@ -8,13 +8,13 @@ D = CSV.read("vehicle_tracks_000.csv", DataFrame) |>
     (d -> d[:,["x","y","vx","vy"]]) |>
     (d -> d .- [1000 1000 0 0]) |>
     (d -> d ./ 20) |>
-    (d -> filter(e -> 0 <= e["x"] <= 1, d)) |>
-    (d -> filter(e -> 0 <= e["y"] <= 1, d))
+    (d -> filter(e -> -1 <= e["x"] <= 1, d)) |>
+    (d -> filter(e -> -1 <= e["y"] <= 1, d))
 
 @polyvar x[1:4]
 d = 3
 ϕ = monomials(x[1:2],0:2d)
-ρ0 = DiracMeasure(x,[1.0,0.4,0.0,0.0])
+ρ0 = DiracMeasure(x,[1.0,0.1,0.0,0.0])
 ρT = DiracMeasure(x,[0.2,0.6,0.0,0.0])
 M = sum(DiracMeasure(x,collect(s)) for s in eachrow(D)) * (1/size(D,1))
 Λ = let v = monomials(x,0:d)
@@ -25,6 +25,7 @@ end
 Σ = integrate.(ϕ*ϕ',M)
 F = svd(Σ)
 N = 25
+save("svd.pdf", Plots.Linear(F.S))
 
 m = GMPModel(Mosek.Optimizer)
 @variable m ρ Meas(x,support=@set(x'x<=10))
@@ -38,9 +39,9 @@ q = let v = monomials(x[1:2],0:d)
     v'*inv(Σ+1e-4I)*v
 end
 save("merge.pdf", Axis([
-    Plots.Image((x...)->1/q(x),(0,1),(0,1)),
+    Plots.Image((x...)->1/q(x),(-1,1),(-1,1)),
     Plots.Quiver(
-        D[1:10:end,"x"],D[1:10:end,"y"],
-        D[1:10:end,"vx"]/10,D[1:10:end,"vy"]/10,
+        D[1:50:end,"x"],D[1:50:end,"y"],
+        D[1:50:end,"vx"]/10,D[1:50:end,"vy"]/10,
         style="-stealth,blue,no markers"),
-],xmin=0,xmax=1,ymin=0,ymax=1))
+],xmin=-1,xmax=1,ymin=-1,ymax=1))
