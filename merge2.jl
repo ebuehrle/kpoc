@@ -24,7 +24,7 @@ end
 
 frames = unique(D[:,"frame_id"])
 M2 = [let Df = filter(e -> e["frame_id"] == f, D); sum(DiracMeasure(x,collect(s[2:end])) for s in eachrow(Df)) end for f in frames]
-Σ = sum(integrate.(ϕ*ϕ',m) for m in M2)
+Σ = stack(integrate.(ϕ,m) for m in M2)
 F = svd(Σ)
 N = 25
 
