@@ -16,18 +16,14 @@ d = 3
 ϕ = monomials(x[1:2],0:2d)
 ρ0 = DiracMeasure(x,[0.5,0.0,0.0,0.0])
 ρT = DiracMeasure(x,[0.2,0.6,0.0,0.0])
-μ0 = DiracMeasure(x,[0.8,0.2,0.0,0.0])
+μ0 = DiracMeasure(x,[1.0,0.1,0.0,0.0])
 M = sum(DiracMeasure(x,collect(s[2:end])) for s in eachrow(D)) * (1/size(D,1))
 Λ = let v = monomials(x,0:d)
     Σ = integrate.(v*v',M)
     v'*inv(Σ+1e-4I)*v
 end
 
-frames = unique(D[:,"frame_id"])
-M2 = [let Df = filter(e -> e["frame_id"] == f, D); 
-    sum(DiracMeasure(x,collect(s[2:end])) for s in eachrow(Df)) 
-end for f in frames]
-Σ = stack(integrate.(ϕ,m) for m in M2)
+Σ = integrate.(ϕ*ϕ',M)
 F = svd(Σ)
 N = 25
 
