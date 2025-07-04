@@ -5,9 +5,9 @@ using LinearAlgebra
 using PGFPlots
 
 D = CSV.read("vehicle_tracks_000.csv", DataFrame) |>
-    (d -> d[:,["x","y","vx","vy"]]) |>
-    (d -> d .- [1000 1000 0 0]) |>
-    (d -> d ./ 20) |>
+    (d -> d[:,["frame_id","x","y","vx","vy"]]) |>
+    (d -> d .- [0 1000 1000 0 0]) |>
+    (d -> d ./ [1 20 20 20 20]) |>
     (d -> filter(e -> 0 <= e["x"] <= 1, d)) |>
     (d -> filter(e -> 0 <= e["y"] <= 1, d))
 
@@ -16,13 +16,15 @@ d = 3
 ϕ = monomials(x[1:2],0:2d)
 ρ0 = DiracMeasure(x,[1.0,0.4,0.0,0.0])
 ρT = DiracMeasure(x,[0.2,0.6,0.0,0.0])
-M = sum(DiracMeasure(x,collect(s)) for s in eachrow(D)) * (1/size(D,1))
+M = sum(DiracMeasure(x,collect(s[2:end])) for s in eachrow(D)) * (1/size(D,1))
 Λ = let v = monomials(x,0:d)
     Σ = integrate.(v*v',M)
     v'*inv(Σ+1e-4I)*v
 end
 
-Σ = integrate.(ϕ*ϕ',M)
+frames = unique(D[:,"frame_id"])
+M2 = [let Df = filter(e -> e["frame_id"] == f, D); sum(DiracMeasure(x,collect(s[2:end])) for s in eachrow(Df)) end for f in frames]
+Σ = sum(integrate.(ϕ*ϕ',m) for m in M2)
 F = svd(Σ)
 N = 25
 
