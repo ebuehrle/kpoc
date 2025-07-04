@@ -25,7 +25,7 @@ end
 
 Σ = integrate.(ϕ*ϕ',M)
 F = svd(Σ)
-N = 25
+N = 10
 
 m = GMPModel(Mosek.Optimizer)
 @variable m ρ Meas(x,support=@set(x'x<=10))
