@@ -44,3 +44,16 @@ save("merge.pdf", Axis([
         D[1:10:end,"vx"]/10,D[1:10:end,"vy"]/10,
         style="-stealth,blue,no markers"),
 ],xmin=0,xmax=1,ymin=0,ymax=1))
+
+Q = F.U'ϕ
+save("q1.pdf", Plots.Contour((x...)->Q[1](x...),(0,1),(0,1)))
+save("q2.pdf", Plots.Contour((x...)->Q[2](x...),(0,1),(0,1)))
+save("q3.pdf", Plots.Contour((x...)->Q[3](x...),(0,1),(0,1)))
+save("q5.pdf", Plots.Contour((x...)->Q[5](x...),(0,1),(0,1)))
+save("q10.pdf", Plots.Contour((x...)->Q[10](x...),(0,1),(0,1)))
+save("q15.pdf", Plots.Contour((x...)->Q[15](x...),(0,1),(0,1)))
+save("q20.pdf", Plots.Contour((x...)->Q[20](x...),(0,1),(0,1)))
+save("q25.pdf", Plots.Contour((x...)->Q[25](x...),(0,1),(0,1)))
+save("q26.pdf", Plots.Contour((x...)->Q[26](x...),(0,1),(0,1)))
+save("q27.pdf", Plots.Contour((x...)->Q[27](x...),(0,1),(0,1)))
+save("q28.pdf", Plots.Contour((x...)->Q[28](x...),(0,1),(0,1)))
