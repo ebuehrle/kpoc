@@ -38,7 +38,7 @@ save("christoffel.pdf", Axis([
 F = svd(Σ)
 N = 25
 
-save("svd.pdf", Axis(Plots.Linear(F.S),xlabel=L"k",ylabel=L"\lambda_k"))
+save("svd.pdf", Axis(Plots.Linear(F.S)))
 
 m = GMPModel(Mosek.Optimizer)
 @variable m ρ Meas(x,support=@set(x'x<=10))
