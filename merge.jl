@@ -49,4 +49,4 @@ for N = 1:length(F.S)
     push!(objv, objective_value(m))
 end
 
-save("objv.pdf", Plots.Linear(Float64.(objv)))
+save("objective.pdf", Plots.Linear(Float64.(objv)))
