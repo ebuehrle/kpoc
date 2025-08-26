@@ -36,16 +36,18 @@ save("christoffel.pdf", Axis([
 
 Σ = integrate.(ϕ*ϕ',M)
 F = svd(Σ)
-N = 25
-
 save("svd.pdf", Axis(Plots.Linear(F.S)))
 
-m = GMPModel(Mosek.Optimizer)
-@variable m ρ Meas(x,support=@set(x'x<=10))
-@objective m Min Mom(Λ,ρ)
-@constraint m F.U[:,1:N]'*Mom.(differentiate(ϕ,x[1:2])*x[3:4],ρ) .== F.U[:,1:N]'*(integrate.(ϕ,ρT) - integrate.(ϕ,ρ0))
-@constraint m F.U[:,N+1:end]'*Mom.(ϕ,ρ) .== 0
-optimize!(m)
+objv = []
+for N = 1:length(F.S)
+    m = GMPModel(Mosek.Optimizer)
+    @variable m ρ Meas(x,support=@set(x'x<=10))
+    @objective m Min Mom(Λ,ρ)
+    @constraint m F.U[:,1:N]'*Mom.(differentiate(ϕ,x[1:2])*x[3:4],ρ) .== F.U[:,1:N]'*(integrate.(ϕ,ρT) - integrate.(ϕ,ρ0))
+    @constraint m F.U[:,N+1:end]'*Mom.(ϕ,ρ) .== 0
+    optimize!(m)
+    push!(objv, objective_value(m))
+end
 
 q = let v = monomials(x[1:2],0:d)
     Σ = integrate.(v*v',ρ)
@@ -58,3 +60,5 @@ save("merge.pdf", Axis([
         D[1:10:end,"vx"]/10,D[1:10:end,"vy"]/10,
         style="-stealth,blue,no markers"),
 ],xmin=0,xmax=1,ymin=0,ymax=1))
+
+save("objv.pdf", Plots.Linear(1:length(F.S), objv))
