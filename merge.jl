@@ -27,6 +27,7 @@ F = svd(Σ)
 
 NN = 1:length(F.S)
 VV = zeros(size(NN))
+XX = []
 for (i,N) in enumerate(NN)
     m = GMPModel(Mosek.Optimizer)
     @variable m ρ Meas(x,support=@set(x'x<=10))
@@ -35,6 +36,10 @@ for (i,N) in enumerate(NN)
     @constraint m F.U[:,N+1:end]'*Mom.(ϕ,ρ) .== 0
     optimize!(m)
     VV[i] = objective_value(m)
+    push!(XX, integrate.(ϕ,[ρ]))
 end
-
 save("objective.pdf", Plots.Linear(NN,VV))
+
+XX = stack(XX)
+EE = sqrt.(sum((XX .- XX[:,end]).^2,dims=1))[:]
+save("error.pdf", Plots.Linear(NN,EE))
