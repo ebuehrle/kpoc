@@ -38,7 +38,6 @@ for (i,N) in enumerate(NN)
     VV[i] = objective_value(m)
     push!(XX, integrate.(ϕ,[ρ]))
 end
-save("objective.pdf", Plots.Linear(NN,VV))
 
 XX = stack(XX)
 EE = sqrt.(sum((XX .- XX[:,end]).^2,dims=1))[:]
